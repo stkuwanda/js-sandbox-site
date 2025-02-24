@@ -1,9 +1,10 @@
 // comparison function to get 
 // ascending order.
+// a shortened version using the idea
+// of only return postive, negative or zero
+// result.
 function compareNumeric(a, b) {
-	if (a > b) return 1;
-	if (a == b) return 0;
-	if (a < b) return -1;
+	return a - b;
 }
 
 const arr = [1, 2, 15];
