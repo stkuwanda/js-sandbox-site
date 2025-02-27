@@ -6,13 +6,65 @@ const input = document.querySelector('input#catname');
 // Assuming you have an array called 'cats' that stores the user's cat list
 let cats = [];
 
+// Error handling object
+const catErrors = {
+	nameEmpty: false,
+	nameExists: false,
+	nameTooLong: false,
+};
+
+// Function to reset error states
+function resetErrors() {
+	for (const key in catErrors) {
+		catErrors[key] = false;
+	}
+}
+
+// Function to display errors
+function displayErrors() {
+	const div = document.querySelector('div#errors');
+	div.innerHTML = ''; // Clear existing errors
+
+	if (catErrors.nameEmpty) {
+		div.innerHTML += '<p>Cat name cannot be empty!</p>';
+	}
+
+	if (catErrors.nameExists) {
+		div.innerHTML += '<p>Cat name already exists!</p>';
+	}
+
+	if (catErrors.nameTooLong) {
+		div.innerHTML += '<p>Cat name cannot be longer than 20 characters!</p>';
+	}
+}
+
+// Function to run validation check
+function inputValidationCheck(catName) {
+	resetErrors();
+
+	if (!catName.trim()) {
+		catErrors.nameEmpty = true;
+	} else if (cats.map(cat => cat.toLowerCase()).includes(catName.toLowerCase())) {
+		catErrors.nameExists = true;
+	} else if (catName.length > 20) {
+		catErrors.nameTooLong = true;
+	}
+
+	if (Object.values(catErrors).some((error) => error)) {
+		displayErrors();
+
+		// Stop execution if errors exist
+		throw new Error('Invalid input detected!');
+	}
+}
+
 // Function which returns a li element with the content inside
 function listItemFactory(value) {
 	const li = document.createElement('li');
 	const button = document.createElement('button');
 	button.append('Delete');
 
-	button.addEventListener('click', function() {
+	button.addEventListener('click', function () {
 		deleteCat(value);
 	});
 
@@ -49,9 +101,14 @@ function loadCatsFromLocalStorage() {
 
 // Example function to add a cat to the array
 function addCat(catName) {
-	cats.push(catName);
-	saveCatsToLocalStorage();
-	updateCatDisplay(); //call function to update the users display.
+	try {
+		inputValidationCheck(catName);
+		cats.push(catName);
+		saveCatsToLocalStorage();
+		updateCatDisplay(); //call function to update the users display.
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 // Function to delete a cat from the array
