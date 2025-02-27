@@ -5,9 +5,9 @@
   "scripts": {
     "start": "lite-server"
   },
-  "author": "",
+  "author": "Simbarashe Tanaka Kuwanda",
   "license": "ISC",
-  "description": "",
+  "description": "This project is a sandbox to experiment with concepts and contructs of vanilla javascript, html and css.",
   "devDependencies": {
     "lite-server": "^2.6.1"
   }
